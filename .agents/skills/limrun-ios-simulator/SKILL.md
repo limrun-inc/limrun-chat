@@ -68,8 +68,8 @@ resolves on its own. When controlling multiple instances, always pass `--id`.
 
 ## Interacting with the app
 
-Prefer tapping by accessibility id, then by label, then coordinates as a last
-resort:
+Prefer tapping by accessibility id, then by label, then coordinates as a
+fallback:
 
 ```bash
 lim ios tap-element --ax-unique-id startButton
@@ -77,17 +77,20 @@ lim ios tap-element --ax-label "Save"
 lim ios tap 201 450
 ```
 
-**Toolbar / nav-bar items usually can't be tapped by id.** SwiftUI collapses
-toolbar children into a single nav-bar group, and those items report
-`AXUniqueId: null` even when you set `.accessibilityIdentifier(...)` (regular
-content `Button`s do expose it). So `tap-element --ax-unique-id` finds nothing
-for a nav-bar button. Set an `.accessibilityLabel` / `.accessibilityIdentifier`
-anyway for documentation, but to actually tap it, read its `AXFrame` from the
-element tree and tap the center by coordinate:
+**Toolbar / nav-bar items usually can't be tapped by id.** SwiftUI can collapse
+toolbar children into a single nav-bar group, and those items may not expose
+their `AXUniqueId` or `AXLabel` even when the app sets
+`.accessibilityIdentifier(...)` and `.accessibilityLabel(...)`. Regular content
+`Button`s often do expose those values and work with `tap-element`.
+
+For toolbar items, add accessibility metadata during implementation, try
+`tap-element` by id or label once, then switch to screenshot-driven coordinates
+if lookup fails. Don't keep searching the same collapsed element tree. Capture a
+screenshot, identify the visible toolbar item, and tap its center:
 
 ```bash
-lim ios element-tree --id <id> | grep -i -A6 -B2 moon   # find the item's AXFrame
-lim ios tap <x> <y> --id <id>                           # tap the frame's center
+lim ios screenshot /tmp/app.png --id <id>
+lim ios tap <x> <y> --id <id>                           # center of visible item
 ```
 
 For text input:
@@ -159,8 +162,9 @@ running and tell them it's still available.
   keyboard on the live stream works. When automating, drive submit through a
   tappable control (a button, a suggestion chip) rather than relying on text
   bound to reactive state, or have the app expose a test affordance.
-- **Toolbar / nav-bar items aren't tappable by id.** See "Interacting with the
-  app" above: read the `AXFrame` from `element-tree` and tap by coordinate.
+- **Toolbar / nav-bar items aren't reliably tappable by id or label.** See
+  "Interacting with the app" above: after one failed selector lookup, use a
+  screenshot to locate the visible item and tap by coordinate.
 - **Bundle ID discovery.** If you don't know the bundle ID, run
   `lim ios list-apps` after a successful install.
 - **Build errors are the build skill's job.** If the app isn't installing, the
