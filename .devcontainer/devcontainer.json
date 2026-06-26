@@ -1,0 +1,7 @@
+{
+  "name": "Limrun Chat",
+  "build": {
+    "context": ".",
+    "dockerfile": "Dockerfile"
+  }
+}

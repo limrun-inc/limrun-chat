@@ -1,0 +1,50 @@
+tasks:
+  install-deps:
+    name: Install dependencies
+    description: Verify and warm the Limrun and Bazel toolchain baked into the Dev Container.
+    triggeredBy:
+      - manual
+      - postDevcontainerStart
+      - prebuild
+    command: |
+      lim --version
+      bazelisk --version
+
+  start-rbe:
+    name: Start Limrun RBE
+    description: Start the Limrun remote build execution tunnel for the iOS app.
+    triggeredBy:
+      - manual
+    dependsOn:
+      - install-deps
+    command: lim xcode rbe --target //App:App
+
+  build:
+    name: Build app
+    description: Build the iOS app through Limrun remote build execution.
+    triggeredBy:
+      - manual
+    dependsOn:
+      - install-deps
+    command: |
+      lim xcode rbe --target //App:App
+      bazelisk --digest_function=sha256 build --config=limrun //App:App
+
+  run:
+    name: Run app
+    description: Build, install, and launch the iOS app on a Limrun simulator.
+    triggeredBy:
+      - manual
+    dependsOn:
+      - install-deps
+    command: |
+      lim xcode rbe --ios --target //App:App
+      bazelisk --digest_function=sha256 build --config=limrun //App:App
+      lim xcode rbe install
+
+  stop-rbe:
+    name: Stop Limrun RBE
+    description: Stop the Limrun remote build execution tunnel for this workspace.
+    triggeredBy:
+      - manual
+    command: lim xcode rbe --stop
