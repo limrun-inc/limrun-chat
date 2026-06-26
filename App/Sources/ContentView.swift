@@ -1,8 +1,11 @@
 import SwiftUI
 
 struct ContentView: View {
+    @AppStorage("isDarkModeEnabled") private var isDarkModeEnabled = false
+
     var body: some View {
-        ChatView()
+        ChatView(isDarkModeEnabled: $isDarkModeEnabled)
+            .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
     }
 }
 
