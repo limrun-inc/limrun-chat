@@ -17,7 +17,7 @@ enum FakeAssistant {
         and the cache makes repeat builds fast, all with no local Xcode.
         """),
         (["rbe", "remote", "cache"], """
-        Remote build execution means the compile, link, and bundling actions run on \
+        !Remote build execution means the compile, link, and bundling actions run on \
         Limrun's workers, not your laptop. The action cache is shared, so an unchanged \
         target is fetched instead of rebuilt, and only what you edited recompiles.
         """),
