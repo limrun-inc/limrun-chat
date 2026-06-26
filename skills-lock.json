@@ -6,6 +6,12 @@
       "sourceType": "github",
       "skillPath": "skills/limrun-xcode-bazel/SKILL.md",
       "computedHash": "0b4547da879880ea406cd5ed87457075080d27bf3a858913ff1af39d89d24ab9"
+    },
+    "limrun-ios-simulator": {
+      "source": "limrun-inc/skills",
+      "sourceType": "github",
+      "skillPath": "skills/limrun-ios-simulator/SKILL.md",
+      "computedHash": "f205e04b988e3a898f51ae1f9edb3cf2ff7505f3871c9ee4bfbadc2f7540e804"
     }
   }
 }
