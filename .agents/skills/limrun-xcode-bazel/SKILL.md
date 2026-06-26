@@ -13,20 +13,6 @@ a remote RBE stack, tunnels it to a local port, and writes a `.limrun/` config s
 `bazelisk build --config=limrun` runs Apple actions remotely. Never fall back to
 local Xcode or build tools.
 
-## Ona task shortcut
-
-When this repository defines `.ona/automations.yaml` and the `gitpod`
-automation CLI is available, prefer the checked-in tasks over raw shell commands:
-
-- Build: `gitpod automations task start build`
-- Build, install, and run on a remote simulator:
-  `gitpod automations task start run`
-- Stop the RBE tunnel: `gitpod automations task start stop-rbe`
-
-Use the raw Limrun workflow below when the task is missing, you need finer
-control over flags, or you are outside an Ona environment. The tasks still need
-Limrun auth via `lim login` or `LIM_API_KEY`.
-
 ## Auth and CLI
 
 Install if needed: `npm install --global lim`. Auth is `lim login` or
