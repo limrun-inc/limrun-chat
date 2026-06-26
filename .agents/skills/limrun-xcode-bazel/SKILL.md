@@ -44,6 +44,21 @@ it survives `lim xcode rbe` regeneration (`.limrun/` does not).
 simulator interaction such as launching the app, tapping UI, reading the element
 tree, taking screenshots, or recording video. Builds run remotely without one.
 
+When implementing UI that will be validated on a simulator, add stable
+accessibility labels and identifiers to new interactive controls where
+practical:
+
+```swift
+Button { ... } label: { ... }
+    .accessibilityLabel("Switch to dark mode")
+    .accessibilityIdentifier("darkModeToggle")
+```
+
+These are useful for real accessibility and for `lim ios element-tree` /
+`tap-element` on ordinary content controls. SwiftUI `ToolbarItem` and nav-bar
+controls may still collapse into a single accessibility group, so simulator
+validation may need screenshot-based coordinate tapping for those controls.
+
 When the user needs simulator interaction, inspect whether the rbe target
 already has a simulator attached:
 
