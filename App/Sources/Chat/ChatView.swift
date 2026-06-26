@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ChatView: View {
     @StateObject private var vm = ChatViewModel()
+    @Binding var prefersDarkMode: Bool
     private let bottomID = "bottom"
 
     var body: some View {
@@ -68,9 +69,15 @@ struct ChatView: View {
             }
         }
         ToolbarItem(placement: .navigationBarTrailing) {
-            Image(systemName: "square.and.pencil")
-                .font(.system(size: 17, weight: .regular))
-                .foregroundStyle(DS.textPrimary)
+            Button {
+                prefersDarkMode.toggle()
+            } label: {
+                Image(systemName: prefersDarkMode ? "sun.max" : "moon")
+                    .font(.system(size: 17, weight: .regular))
+                    .foregroundStyle(DS.textPrimary)
+            }
+            .accessibilityLabel(prefersDarkMode ? "Switch to light mode" : "Switch to dark mode")
+            .accessibilityIdentifier("darkModeToggle")
         }
     }
 
