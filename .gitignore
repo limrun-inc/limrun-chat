@@ -1,0 +1,9 @@
+/bazel-*
+/bazel-output-base
+.limrun/
+*.app.tar.gz
+.env
+.DS_Store
+
+# Claude Code session-local skills (canonical copy lives in .agents/skills/)
+/.claude/

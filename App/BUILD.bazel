@@ -1,0 +1,26 @@
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+
+ios_application(
+    name = "App",
+    app_icons = glob(["Resources/Assets.xcassets/AppIcon.appiconset/**"]),
+    bundle_id = "com.limrun.chat",
+    bundle_name = "Limrun Chat",
+    families = ["iphone"],
+    infoplists = ["Info.plist"],
+    launch_storyboard = "Resources/LaunchScreen.storyboard",
+    minimum_os_version = "16.0",
+    resources = glob(
+        ["Resources/Assets.xcassets/**"],
+        exclude = ["Resources/Assets.xcassets/AppIcon.appiconset/**"],
+    ),
+    visibility = ["//visibility:public"],
+    deps = [":AppLib"],
+)
+
+swift_library(
+    name = "AppLib",
+    srcs = glob(["Sources/**/*.swift"]),
+    module_name = "AppLib",
+    tags = ["manual"],
+)

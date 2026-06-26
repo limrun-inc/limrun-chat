@@ -1,0 +1,22 @@
+# Don't litter the workspace with convenience symlinks.
+build --experimental_convenience_symlinks=ignore
+
+# Build for the iOS simulator by default; no codesigning required.
+# Min iOS 16: the app uses NavigationStack, TextField(axis:), and
+# .scrollDismissesKeyboard. The live dark-mode feature itself is iOS-15-safe.
+build --ios_minimum_os=16.0
+
+# Show full errors for failures.
+build --verbose_failures
+
+# rules_apple's recommended RBE tuning, carried by real-world iOS repos. It pins
+# bundling/linking/signing actions to the local machine. On a macOS client that
+# is a performance optimization, but on a Linux client (no local Xcode) it forces
+# Apple actions onto a machine that cannot run them, so limrun's generated config
+# strips these back out. Kept above the try-import so .limrun/bazelrc can override.
+build --modify_execution_info=^(BundleApp|BundleTreeApp|DsymDwarf|DsymLipo|GenerateAppleSymbolsFile|ObjcBinarySymbolStrip|CppArchive|CppLink|ObjcLink|ProcessAndSign|SignBinary|SwiftArchive|SwiftStdlibCopy)$=+no-remote,^(BundleResources|ImportedDynamicFrameworkProcessor)$=+no-remote-exec
+
+# Loads the remote-execution config that `lim xcode rbe` generates under
+# .limrun/ (gitignored). try-import silently skips it when absent, so plain
+# local builds are unaffected on a fresh clone.
+try-import %workspace%/.limrun/bazelrc
