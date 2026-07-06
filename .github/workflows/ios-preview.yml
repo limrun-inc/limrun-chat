@@ -22,7 +22,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # TODO(turkenh): pin back to a released tag once the bazel branch merges.
-      - uses: limrun-inc/ios-preview-action@bazel-rbe
+      - uses: limrun-inc/ios-preview-action@main
         with:
           api-key: ${{ secrets.LIM_API_KEY }}
