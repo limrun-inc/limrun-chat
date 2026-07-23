@@ -1,6 +1,6 @@
 # Limrun Chat
 
-A polished, ChatGPT-style iOS chat app built with **Bazel** (`rules_apple` +
+A ChatGPT-style iOS chat app built with **Bazel** (`rules_apple` +
 `rules_swift`, bzlmod, Bazel 9) that a coding agent can build from **any
 environment**, including Linux, using Limrun's remote build execution (RBE). No
 local Xcode required.
