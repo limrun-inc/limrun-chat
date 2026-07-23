@@ -2,7 +2,12 @@ import SwiftUI
 
 struct ChatView: View {
     @StateObject private var vm = ChatViewModel()
+    @AppStorage("appearanceMode") private var appearanceModeRaw = AppearanceMode.system.rawValue
     private let bottomID = "bottom"
+
+    private var appearanceMode: AppearanceMode {
+        AppearanceMode(rawValue: appearanceModeRaw) ?? .system
+    }
 
     var body: some View {
         NavigationStack {
@@ -27,6 +32,7 @@ struct ChatView: View {
                 .toolbarBackground(.visible, for: .navigationBar)
         }
         .tint(DS.textPrimary)
+        .preferredColorScheme(appearanceMode.colorScheme)
     }
 
     private var messageList: some View {
@@ -53,9 +59,19 @@ struct ChatView: View {
 
     @ToolbarContentBuilder private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
-            Image(systemName: "line.3.horizontal")
-                .font(.system(size: 18, weight: .regular))
-                .foregroundStyle(DS.textPrimary)
+            Menu {
+                Picker("Appearance", selection: $appearanceModeRaw) {
+                    ForEach(AppearanceMode.allCases) { mode in
+                        Label(mode.label, systemImage: mode.icon)
+                            .tag(mode.rawValue)
+                    }
+                }
+            } label: {
+                Image(systemName: "line.3.horizontal")
+                    .font(.system(size: 18, weight: .regular))
+                    .foregroundStyle(DS.textPrimary)
+            }
+            .accessibilityIdentifier("appearanceMenu")
         }
         ToolbarItem(placement: .principal) {
             HStack(spacing: 5) {
