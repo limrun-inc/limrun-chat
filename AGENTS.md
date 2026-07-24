@@ -25,3 +25,27 @@ During development you MUST build through Limrun RBE, never local Xcode or
   `bazelisk --digest_function=sha256 build --config=limrun //App:App`).
 - Run `lim xcode rbe` from this directory (the Bazel workspace root); it writes
   `.limrun/` here.
+
+## Cursor Cloud specific instructions
+
+The startup update script already installs the `lim` CLI and `bazelisk`, and
+`LIM_API_KEY` is provided as a secret, so `lim` is authenticated automatically
+(no `lim login` needed).
+
+- npm global prefix: `node` on PATH is `/exec-daemon/node`, which makes npm's
+  default global prefix unwritable. The update script points the global prefix at
+  the nvm bin dir (already on PATH) so `lim`/`bazelisk` resolve — don't `sudo npm
+  install -g`.
+- Build/run (no test or lint targets exist; the Swift build is the verification):
+  run `lim xcode rbe --ios` once to bring up RBE and attach a simulator, then
+  `bazelisk --digest_function=sha256 build --config=limrun //App`. A successful
+  build auto-installs and relaunches on the attached simulator. Tear down with
+  `lim xcode rbe --stop`.
+- Driving the simulator: get the simulator id from `lim xcode get`, then pass
+  `--id <sim-id>` to every `lim ios ...` command. `lim ios screenshot`,
+  `element-tree`, and `tap-element` work; `lim ios launch-app` may hang (the
+  build already launches the app, so you rarely need it).
+- Sending a chat message: tap a suggestion chip
+  (`lim ios tap-element --ax-unique-id "suggestion:<label>" --id <sim-id>`).
+  Automated `lim ios type` does not fire the SwiftUI binding, so the composer's
+  send button stays disabled — chips are the reliable way to submit.
