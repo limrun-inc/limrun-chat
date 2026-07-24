@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ChatView: View {
     @StateObject private var vm = ChatViewModel()
+    @AppStorage("appTheme") private var theme: AppTheme = .system
     private let bottomID = "bottom"
 
     var body: some View {
@@ -27,6 +28,7 @@ struct ChatView: View {
                 .toolbarBackground(.visible, for: .navigationBar)
         }
         .tint(DS.textPrimary)
+        .preferredColorScheme(theme.colorScheme)
     }
 
     private var messageList: some View {
@@ -68,10 +70,28 @@ struct ChatView: View {
             }
         }
         ToolbarItem(placement: .navigationBarTrailing) {
+            themeMenu
+        }
+        ToolbarItem(placement: .navigationBarTrailing) {
             Image(systemName: "square.and.pencil")
                 .font(.system(size: 17, weight: .regular))
                 .foregroundStyle(DS.textPrimary)
         }
+    }
+
+    private var themeMenu: some View {
+        Menu {
+            Picker("Appearance", selection: $theme) {
+                ForEach(AppTheme.allCases) { option in
+                    Label(option.label, systemImage: option.symbol).tag(option)
+                }
+            }
+        } label: {
+            Image(systemName: theme.symbol)
+                .font(.system(size: 17, weight: .regular))
+                .foregroundStyle(DS.textPrimary)
+        }
+        .accessibilityIdentifier("themeMenu")
     }
 
     private func scrollToBottom(_ proxy: ScrollViewProxy, animated: Bool = true) {
